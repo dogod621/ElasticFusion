@@ -1,6 +1,6 @@
 # ElasticFusion #
-
 Real-time dense visual SLAM system capable of capturing comprehensive dense globally consistent surfel-based maps of room scale environments explored using an RGB-D camera.
+( Just make it build easyer for Windows via using CMake, and use librealsense2 instead of librealsense. Original Author: https://github.com/mp3guy/ElasticFusion  )
 
 # Related Publications #
 Please cite this work if you make use of our system in any of your own endeavors:
@@ -10,32 +10,8 @@ Please cite this work if you make use of our system in any of your own endeavors
 
 # 1. What do I need to build it? #
 
-## 1.1. Ubuntu ##
-
-* Ubuntu 14.04, 15.04 or 16.04 (Though many other linux distros will work fine)
-* CMake
-* OpenGL
-* [CUDA >= 7.0](https://developer.nvidia.com/cuda-downloads)
-* [OpenNI2](https://github.com/occipital/OpenNI2)
-* SuiteSparse
-* Eigen
-* zlib
-* libjpeg
-* [Pangolin](https://github.com/stevenlovegrove/Pangolin)
-* [librealsense] (https://github.com/IntelRealSense/librealsense) - Optional (for Intel RealSense cameras)
-
-Firstly, add [nVidia's official CUDA repository](https://developer.nvidia.com/cuda-downloads) to your apt sources, then run the following command to pull in most dependencies from the official repos:
-
-```bash
-sudo apt-get install -y cmake-qt-gui git build-essential libusb-1.0-0-dev libudev-dev openjdk-7-jdk freeglut3-dev libglew-dev cuda-7-5 libsuitesparse-dev libeigen3-dev zlib1g-dev libjpeg-dev
-```
-
-Afterwards install [OpenNI2](https://github.com/occipital/OpenNI2) and [Pangolin](https://github.com/stevenlovegrove/Pangolin) from source. Note, you may need to manually tell CMake where OpenNI2 is since Occipital's fork does not have an install option. It is important to build Pangolin last so that it can find some of the libraries it has optional dependencies on. 
-
-When you have all of the dependencies installed, build the Core followed by the GUI. 
-
-## 1.2. Windows - Visual Studio ##
-* Windows 7/10 with Visual Studio 2013 Update 5 (Though other configurations may work)
+## 1.1. Windows - Visual Studio ##
+* Windows 7/10 with Visual Studio 2017 (Though other configurations may work, but 2019 will crash in run time)
 * [CMake] (https://cmake.org/)
 * OpenGL
 * [CUDA >= 7.0](https://developer.nvidia.com/cuda-downloads)
@@ -45,36 +21,18 @@ When you have all of the dependencies installed, build the Core followed by the 
 * [Pangolin](https://github.com/stevenlovegrove/Pangolin)
   * zlib (Pangolin can automatically download and build this)
   * libjpeg (Pangolin can automatically download and build this)
-* [librealsense] (https://github.com/IntelRealSense/librealsense) - Optional (for Intel RealSense cameras)
+* [librealsense2] (https://github.com/IntelRealSense/librealsense) - Optional (for Intel RealSense cameras)
 
-Firstly install cmake and cuda. Then download and build from source OpenNI2, SuiteSparse. Next download Eigen (no need to build it since it is a header-only library). Then download and build from source Pangolin but pay attention to the following cmake settings. There will be a lot of dependencies where path was not found. That is OK except OPENNI2 and EIGEN3 (those should be set to valid paths). You also need to set MSVC_USE_STATIC_CRT to false in order to correctly link to ElasticFusion projects. Also, you can set BUILD_EXAMPLES to false since we don't need them and some were crashing on my machine.
+1. Install cmake and cuda, OpenNI2, RealSense SDK(Optional). 
+2. Download and build from source Eigen, SuiteSparse.
+3. Download and build from source Pangolin but pay attention to the following cmake settings. 
+There will be a lot of dependencies where path was not found. 
+That is OK except OPENNI2 and EIGEN3 (those should be set to valid paths, and make sure define "HAVE_EIGEN"). 
+You also need to set MSVC_USE_STATIC_CRT to false in order to correctly link to ElasticFusion projects. 
+4. Refer to my CmakeList.txt, copy the headers, libs and dlls of Eigen, SuiteSparse and Pangolin to right place ( I didnot wrie cmake find package for Eigen, SuiteSparse and Pangolin )
+5. Run Cmkae and it will build all automatically for you.
 
-Finally, build Core and GUI.
-
-
-# 2. Is there an easier way to build it? #
-Yes, if you run the *build.sh* script on a fresh clean install of Ubuntu 14.04, 15.04, or 16.04, enter your password for sudo a few times and wait a few minutes all dependencies will get downloaded and installed and it should build everything correctly. This has not been tested on anything but fresh installs, so I would advise using it with caution if you already have some of the dependencies installed.
-
-# 3. Installation issues #
-
-***`#include <Eigen/Core>` not found***
-
-```bash
-sudo ln -sf /usr/include/eigen3/Eigen /usr/include/Eigen
-sudo ln -sf /usr/include/eigen3/unsupported /usr/include/unsupported
-```
-
-***invalid use of incomplete type ‘const struct Eigen ...***
-
-Pangolin must be installed AFTER all the other libraries to make use of optional dependencies.
-
-***GLSL 3.30 is not supported. Supported versions are 1.10, 1.20, 1.30, 1.00 ES and 3.00 ES***
-
-Make sure you are running ElasticFusion on your nVidia GPU. In particular, if you have an Optimus GPU
-- If you use Prime, follow instructions [here](http://askubuntu.com/questions/661922/how-am-i-supposed-to-use-nvidia-prime)
-- If you use Bumblebee, remember to run as `optirun ./ElasticFusion`
-
-# 4. How do I use it? #
+# 2. How do I use it? #
 There are three subprojects in the repo:
 
 * The *Core* is the main engine which builds into a shared library that you can link into other projects and treat like an API. 
@@ -111,43 +69,7 @@ The GUI (*ElasticFusion*) can take a bunch of parameters when launching it from 
 
 Essentially by default *./ElasticFusion* will try run off an attached ASUS sensor live. You can provide a .klg log file instead with the -l parameter. You can capture .klg format logs using either [Logger1](https://github.com/mp3guy/Logger1) or [Logger2](https://github.com/mp3guy/Logger2). 
 
-# 5. How do I just use the Core API? #
-The libefusion.so shared library which gets built by the Core is what you want to link against.
-
-An example of this can be seen in the GUI code. Essentially all you need to do is utilise the provided Findefusion.cmake file in GUI/src and include the following in your CMakeLists.txt file:
-
-    find_package(efusion REQUIRED)
-    include_directories(${EFUSION_INCLUDE_DIR})
-    target_link_libraries(MyProject ${EFUSION_LIBRARY})
-    
-To then use the Core API, make sure to include the header file in your source file:
-```cpp
-    #include <ElasticFusion.h>
-```
-
-Initialise the static configuration parameters once somewhere at the start of your program (this [smells](http://en.wikipedia.org/wiki/Code_smell), but whatever):
-```cpp
-    Resolution::getInstance(640, 480);
-    Intrinsics::getInstance(528, 528, 320, 240);
-```
-
-Create an OpenGL context before creating an ElasticFusion object, as ElasticFusion uses OpenGL internally. You can do this whatever way you wish, using Pangolin is probably easiest given it's a dependency:
-```cpp
-    pangolin::Params windowParams;
-    windowParams.Set("SAMPLE_BUFFERS", 0);
-    windowParams.Set("SAMPLES", 0);
-    pangolin::CreateWindowAndBind("Main", 1280, 800, windowParams);
-```
-
-Make an ElasticFusion object and start using it:
-```cpp
-    ElasticFusion eFusion;
-    eFusion.processFrame(rgb, depth, timestamp, currentPose, weightMultiplier);
-```
-
-See the source code of MainController.cpp in the GUI source to see more usage.
-
-# 6. Datasets #
+# 5. Datasets #
 
 We have provided a sample dataset which you can run easily with ElasticFusion for download [here](http://www.doc.ic.ac.uk/~sleutene/datasets/elasticfusion/dyson_lab.klg). Launch it as follows:
 
@@ -155,40 +77,5 @@ We have provided a sample dataset which you can run easily with ElasticFusion fo
 ./ElasticFusion -l dyson_lab.klg
 ```
 
-# 7. License #
+# 6. License #
 ElasticFusion is freely available for non-commercial use only.  Full terms and conditions which govern its use are detailed [here](http://www.imperial.ac.uk/dyson-robotics-lab/downloads/elastic-fusion/elastic-fusion-license/) and in the LICENSE.txt file.
-
-# 8. FAQ #
-***What are the hardware requirements?***
-
-A [very fast nVidia GPU (3.5TFLOPS+)](https://en.wikipedia.org/wiki/List_of_Nvidia_graphics_processing_units#GeForce_900_Series), and a fast CPU (something like an i7). If you want to use a non-nVidia GPU you can rewrite the tracking code or substitute it with something else, as the rest of the pipeline is actually written in the OpenGL Shading Language. 
-
-***How can I get performance statistics?***
-
-Download [Stopwatch](https://github.com/mp3guy/Stopwatch) and run *StopwatchViewer* at the same time as ElasticFusion. 
-
-***I ran a large dataset and got assert(graph.size() / 16 < MAX_NODES) failed***
-
-Currently there's a limit on the number of nodes in the deformation graph down to lazy coding (using a really wide texture instead of a proper 2D one). So we're bound by the maximum dimension of a texture, which is 16384 on modern cards/OpenGL. Either fix the code so this isn't a problem any more, or increase the modulo factor in *Shaders/sample.geom*. 
-
-***I have a nice new laptop with a good GPU but it's still slow***
-
-If your laptop is running on battery power the GPU will throttle down to save power, so that's unlikely to work (as an aside, [Kintinuous](https://github.com/mp3guy/Kintinuous) will run at 30Hz on a modern laptop on battery power these days). You can try disabling SO(3) pre-alignment, enabling fast odometry, only using either ICP or RGB tracking and not both, running in open loop mode or disabling the tracking pyramid. All of these will cost you accuracy. 
-
-***I saved a map, how can I view it?***
-
-Download [Meshlab](http://meshlab.sourceforge.net/). Select Render->Shaders->Splatting. 
-
-***The map keeps getting corrupted - tracking is failing - loop closures are incorrect/not working***
-
-Firstly, if you're running live and not processing a log file, ensure you're hitting 30Hz, this is important. Secondly, you cannot move the sensor extremely fast because this violates the assumption behind projective data association. In addition to this, you're probably using a primesense, which means you're suffering from motion blur, unsynchronised cameras and rolling shutter. All of these are aggravated by fast motion and hinder tracking performance. 
-
-If you're not getting loop closures and expecting some, pay attention to the inlier and residual graphs in the bottom right, these are an indicator of how close you are to a local loop closure. For global loop closures, you're depending on [fern keyframe encoding](http://www.doc.ic.ac.uk/~bglocker/pdfs/glocker2015tvcg.pdf) to save you, which like all appearance-based place recognition methods, has its limitations. 
-
-***Is there a ROS bridge/node?***
-
-No. The system relies on an extremely fast and tight coupling between the mapping and tracking on the GPU, which I don't believe ROS supports natively in terms of message passing. 
-
-***This doesn't seem to work like it did in the videos/papers***
-
-A substantial amount of refactoring was carried out in order to open source this system, including rewriting a lot of functionality to avoid certain licenses and reduce dependencies. Although great care was taken during this process, it is possible that performance regressions were introduced and have not yet been discovered.
