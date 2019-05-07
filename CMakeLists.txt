@@ -45,8 +45,8 @@ set(SUITESPARSE_INCLUDE_DIRS
 	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/include/")
 	
 set(SUITESPARSE_LIBRARIES
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/lapack_blas_windows/libblas.lib"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/lapack_blas_windows/liblapack.lib"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/libblas.lib"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/liblapack.lib"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/metis.lib"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/suitesparseconfig.lib"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/SuiteSparse_GPURuntime.lib"
@@ -64,11 +64,11 @@ set(SUITESPARSE_LIBRARIES
 	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib/libcolamd.lib")
 
 set(SUITESPARSE_DLLS
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/bin/lapack_blas_windows/libblas.dll"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/bin/lapack_blas_windows/libgcc_s_sjlj-1.dll"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/bin/lapack_blas_windows/libgfortran-3.dll"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/bin/lapack_blas_windows/liblapack.dll"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/bin/lapack_blas_windows/libquadmath-0.dll")
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/libblas.dll"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/libgcc_s_sjlj-1.dll"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/libgfortran-3.dll"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/liblapack.dll"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../Dependency/SuiteSparse/install/lib64/lapack_blas_windows/libquadmath-0.dll")
 
 # Core
 set(CORE_INCLUDE_DIRS
