@@ -23,18 +23,18 @@ Please cite this work if you make use of our system in any of your own endeavors
   * libjpeg (Pangolin can automatically download and build this)
 * [librealsense2] (https://github.com/IntelRealSense/librealsense) - Optional (for Intel RealSense cameras)
 
-1. Create folders:
-Your project folder structure should be this manner:
-  Root/
-  |
-  |-ElasticFusion/ # Source code and CMakeLists of ElasticFusion
-  | CMakeLists.txt # CMakeLists, you should follow this file to place headers, libs and dlls of Eigen, SuiteSparse and Pangolin
-  |
-  |-Dependency/    # The folder that is used to place dependency libraries: Eigen, SuiteSparse and Pangolin
-  |
-  |-build          # The folder that is used to build ElasticFusion
-  |
-  |-install        # Final folder that contains Libs and Exes
+1. Create folders:<br/>
+Your project folder structure should be this manner:<br/>
+  Root/<br/>
+  |<br/>
+  |-ElasticFusion/ # Source code and CMakeLists of ElasticFusion<br/>
+  | CMakeLists.txt # CMakeLists, you should follow this file to place headers, libs and dlls of Eigen, SuiteSparse and Pangolin<br/>
+  |<br/>
+  |-Dependency/    # The folder that is used to place dependency libraries: Eigen, SuiteSparse and Pangolin<br/>
+  |<br/>
+  |-build          # The folder that is used to build ElasticFusion<br/>
+  |<br/>
+  |-install        # Final folder that contains Libs and Exes<br/>
 
 2. Install cmake and cuda, OpenNI2, RealSense SDK(Optional). 
 3. Download and build from source Eigen, SuiteSparse.
