@@ -23,14 +23,27 @@ Please cite this work if you make use of our system in any of your own endeavors
   * libjpeg (Pangolin can automatically download and build this)
 * [librealsense2] (https://github.com/IntelRealSense/librealsense) - Optional (for Intel RealSense cameras)
 
-1. Install cmake and cuda, OpenNI2, RealSense SDK(Optional). 
-2. Download and build from source Eigen, SuiteSparse.
-3. Download and build from source Pangolin but pay attention to the following cmake settings. 
+1. Create folders:
+Your project folder structure should be this manner:
+  Root/
+  |
+  |-ElasticFusion/ # Source code and CMakeLists of ElasticFusion
+  | CMakeLists.txt # CMakeLists, you should follow this file to place headers, libs and dlls of Eigen, SuiteSparse and Pangolin
+  |
+  |-Dependency/    # The folder that is used to place dependency libraries: Eigen, SuiteSparse and Pangolin
+  |
+  |-build          # The folder that is used to build ElasticFusion
+  |
+  |-install        # Final folder that contains Libs and Exes
+
+2. Install cmake and cuda, OpenNI2, RealSense SDK(Optional). 
+3. Download and build from source Eigen, SuiteSparse.
+4. Download and build from source Pangolin but pay attention to the following cmake settings. 
 There will be a lot of dependencies where path was not found. 
 That is OK except OPENNI2 and EIGEN3 (those should be set to valid paths, and make sure define "HAVE_EIGEN"). 
 You also need to set MSVC_USE_STATIC_CRT to false in order to correctly link to ElasticFusion projects. 
-4. Refer to my CmakeList.txt, copy the headers, libs and dlls of Eigen, SuiteSparse and Pangolin to right place ( I didnot wrie cmake find package for Eigen, SuiteSparse and Pangolin )
-5. Run Cmkae and it will build all automatically for you.
+5. Refer to my CmakeList.txt, copy the headers, libs and dlls of Eigen, SuiteSparse and Pangolin to right place ( I didnot wrie cmake find package for Eigen, SuiteSparse and Pangolin ) 
+6. Run Cmkae and it will build all automatically for you.
 
 # 2. How do I use it? #
 There are three subprojects in the repo:
